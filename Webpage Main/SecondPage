@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlackSmith Ether</title>
+    <style>
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            background-color: black;
+            color: #ffffff;
+        }
+
+        .header {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .home-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px 20px;
+            background-color: red;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .chat-bar {
+            position: relative;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .chat-bar input[type="text"] {
+            width: 60%;
+            padding: 10px;
+            border: 1px solid #00ff00;
+            background-color: #000;
+            color: #00ff00;
+            border-radius: 5px;
+        }
+
+        .chat-bar button {
+            padding: 10px 20px;
+            background-color: #970e0e;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chat-bar button:hover {
+            background-color: #333;
+        }
+
+        #output {
+            margin-top: 20px;
+            padding: 20px;
+            width: 80%;
+            height: 650px;
+            background-color: #000;
+            border: 1px solid #ffffff;
+            overflow-y: scroll;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 16px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+        }
+
+        .confirm-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: red;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .confirm-button:hover {
+            background-color: #DDA0DD;
+        }
+    </style>
+</head>
+
+<body>
+    <a href="index.html" class="home-button">Home</a>
+
+    <div class="header">
+        <img src="file:///D:/ComputerCOde/BlackSmithEther/Project%201/Webpage%20Main/github-header-image(4).png"
+            alt="BlackSmith Ether Header" width="960" height="200">
+    </div>
+
+    <div id="output">Fetching repository data...</div>
+
+    <script>
+        async function fetchRepo() {
+            const params = new URLSearchParams(window.location.search);
+            const repoInput = params.get('repo');
+            const output = document.getElementById('output');
+
+            try {
+                // Extract owner and repo name from GitHub link
+                const repoPath = new URL(repoInput).pathname.split('/').filter(Boolean);
+                if (repoPath.length < 2) {
+                    output.innerHTML = 'Invalid GitHub repository link.';
+                    return;
+                }
+                const owner = repoPath[0];
+                const repo = repoPath[1];
+
+                // Fetch repository contents
+                const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    output.innerHTML = 'Repository files:\n\n';
+                    data.forEach(file => {
+                        output.innerHTML += file.path + '\n';
+                    });
+
+                    // Add the confirmation question and button
+                    const confirmDiv = document.createElement('div');
+                    confirmDiv.innerHTML = `
+                        <p>Would you like to security audit these files?</p>
+                        <button class="confirm-button" onclick="confirmAudit()">Confirm</button>
+                    `;
+                    output.appendChild(confirmDiv);
+                } else {
+                    output.innerHTML = `Error: ${data.message}`;
+                }
+            } catch (error) {
+                output.innerHTML = `Error: ${error.message}`;
+            }
+        }
+
+        function confirmAudit() {
+            alert("Audit process initiated for the listed files.");
+        }
+
+        fetchRepo();
+    </script>
+</body>
+
+</html>
