@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlackSmith Ether</title>
+    <style>
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            width: 200px;
+            height: 200px;
+            right: -450px;
+            margin-top: 250px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .chat-bar {
+            margin-top: 20px;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .chat-bar input[type="text"] {
+            width: 60%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .chat-bar button {
+            padding: 10px 20px;
+            background-color: #970e0e;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chat-bar button:hover {
+            background-color: #333;
+        }
+
+        #matrix {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            z-index: 1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <img src="file:///D:/ComputerCOde/BlackSmithEther/Project%201/Webpage%20Main/github-header-image(4).png"
+            alt="BlackSmith Ether Header">
+
+        alt="BlackSmith Ether Header" width="960" height="200">
+    </div>
+
+    <div class="chat-bar">
+        <input type="text" placeholder="Paste your GitHub Repository link here">
+        <button>Submit</button>
+    </div>
+
+    <canvas id="matrix"></canvas>
+
+    <script>
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+
+        const drops = [];
+        for (let x = 0; x < columns; x++) {
+            drops[x] = canvas.height / fontSize;
+        }
+
+        function draw() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#FF0000';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = String.fromCharCode(Math.random() * 128);
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+
+                drops[i]++;
+            }
+        }
+
+        setInterval(draw, 33);
+    </script>
+
+</body>
+
+</html>
